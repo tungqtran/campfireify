@@ -3,17 +3,108 @@
 <head>
     <title>Results</title>
 </head>
-<body>
+
+<style>
+
+    .song-item {
+        opacity: 0; /* Initially invisible */
+        animation: fadeIn 1s ease-in-out forwards; /* Apply fadeIn animation */
+    }
+
+/* Define keyframes for the fadeIn animation */
+    @keyframes fadeIn {
+        to {
+            opacity: 1; /* Final opacity to 1 (fully visible) */
+        }
+    }
+
+/* Sequentially delay each item using nth-child */
+.song-item:nth-child(1) {
+    animation-delay: 1s;  /* First song appears after 0.5s */
+}
+
+.song-item:nth-child(2) {
+    animation-delay: 1.5s;    /* Second song appears after 1s */
+}
+
+.song-item:nth-child(3) {
+    animation-delay: 2s;  /* Third song appears after 1.5s */
+}
+
+.song-item:nth-child(4) {
+    animation-delay: 2.5s;    /* Fourth song appears after 2s */
+}
+
+.song-item:nth-child(5) {
+    animation-delay: 3s;  /* Fifth song appears after 2.5s */
+}
+.song-item:nth-child(6) {
+    animation-delay: 3.5s /* First song appears after 0.5s */
+}
+
+.song-item:nth-child(7) {
+    animation-delay: 4s;    /* Second song appears after 1s */
+}
+
+.song-item:nth-child(8) {
+    animation-delay: 4.5s;  /* Third song appears after 1.5s */
+}
+
+.song-item:nth-child(9) {
+    animation-delay: 5s;    /* Fourth song appears after 2s */
+}
+
+.song-item:nth-child(10) {
+    animation-delay: 5.5s;  /* Fifth song appears after 2.5s */
+}
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    h2 {
+        color: #333;
+    }
+    ol {
+       
+        margin: left 500px;
+        background-color:white; 
+        padding:20px;
+        border-radius: 5px;
+        padding-left:50px;
+      
+    }
+      
+
+    .banner {
+      background-color: black ;  
+      color: white;
+      text-align: center;
+      padding: 35px 0;
+      font-size: 3.5em;
+      font-weight: bold;
+      font-family: 'Segoe UI', sans-serif;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<body style="background-color:#1DB954;">
+
+
     {% if choice == 'artist' %}
-        <h2>Top Songs by {{ artist }}</h2>
-        <ul>
-        {% for song in songs %}
-            <li>{{ song.name }} (Popularity: {{ song.popularity }})</li>
-        {% endfor %}
-        </ul>
+    <div class="banner" style="text-align: center;">
+        🎧 Top Songs By <span style="color: goldenrod;">{{ artist|title }}</span>:
+    </div>
+        <ol>
+            {% for song in songs %}
+                <li class="song-item">{{ song.name }} (Popularity: {{ song.popularity }})</li>
+            {% endfor %}
+        </ol>
     {% elif choice == 'track' %}
-        <h2>Track Info</h2>
-        <p>Song: {{ track.name }}</p>
+    <div class="banner" style="text-align: center;">
+        🎧 Track Info For <span style="color: goldenrod;">{{ track.name|title }}</span>:
+    </div>
+     
         <p>Artist: {{ track.artists[0].name }}</p>
         <p>Album: {{ track.album.name }}</p>
         <p>Duration: {{ (track.duration_ms / 60000)|round(2) }} minutes</p>
