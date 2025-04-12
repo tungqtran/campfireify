@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, session, render_template
+from flask import Flask, redirect, request, session, render_template, jsonify
 import requests
 import os
 from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
@@ -86,48 +86,50 @@ def wrapped():
         artists=top_artists
     )
 
-@app.route('/marshmallow')
-def marshmallow():
-    token = session.get('token')
-    if not token:
-        return redirect('/login')
-
-    headers = {'Authorization': f'Bearer {token}'}
-
-
-    #TOP 100 track
-     # Get top tracks
-    # Get top tracks
-    tracks_response = requests.get(
-        'https://api.spotify.com/v1/me/top/tracks?limit=50',
-        headers=headers
-    )
-    top_tracks = tracks_response.json().get('items', [])
-
-
-    # Get top artists
-    artists_response = requests.get(
-        'https://api.spotify.com/v1/me/top/artists?limit=10',
-        headers=headers
-    )
-    top_artists = artists_response.json().get('items', [])
-
-    return render_template(
-        'marshmallow.html',
-        tracks=top_tracks,
-        artists=top_artists
-    )
-
-
 @app.route('/campfire')
 def campfire():
     token = session.get('token')
+    
     if not token:
         return redirect('/login')
-    
+
+
     headers = {'Authorization': f'Bearer {token}'}
 
-    return render_template('campfire.html')
+    spotify_api_response = requests.get(
+        'https://api.spotify.com/v1/me/player/currently-playing',
+        headers = headers
+    )
+
+    if spotify_api_response.status_code == 200:
+        data = spotify_api_response.json()
+        if data.get('item'): #if track playing
+            track = {
+                'name': data['item']['name'],
+                'artist': ', '.join([artist['name'] for artist in data['item']['artists']]),
+                'album': data['item']['album']['name'],
+                'image': data['item']['album']['images'][0]['url']
+            }
+            
+        else: # no track playing
+            track = {
+                'name': "no track",
+                'artist': "n/a",
+                'album': "n/a",
+                'image': "https://i.redd.it/kra8id3at5ld1.png"
+            }
+            
+    else: # a status =/= 200 means something wrong happened (bad token, etc.)
+        track = {
+            'name': "status != 200",
+            'artist': "n/a",
+            'album': "n/a",
+            'image': "https://i.redd.it/kra8id3at5ld1.png"
+        }
+        
+    return render_template('campfire.html', track=track)
+
+
 
 @app.route('/explorer')
 def explorer_home():
