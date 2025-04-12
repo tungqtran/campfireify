@@ -30,17 +30,36 @@ def login():
 def callback():
     code = request.args.get('code')
 
-    response = requests.post("https://accounts.spotify.com/api/token", data = {
+    token_url = 'https://accounts.spotify.com/api/token'
+
+    payload = {
         'grant_type': 'authorization_code',
         'code': code,
-        'redirect_uri': REDIRECT_URI,
+        'redirect_uri': REDIRECT_URI,  
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
-    })
+    }
 
+    response = requests.post(token_url, data=payload)
     token_info = response.json()
-    access_token = token_info['access_token']
-    session['token'] = access_token
+    
+    session['token'] = token_info.get('access_token')
+
+    return f"Success! Token: {session['token']}"
+
+
+
+#    response = requests.post("https://accounts.spotify.com/api/token", data = {
+#        'grant_type': 'authorization_code',
+#        'code': code,
+#        'redirect_uri': REDIRECT_URI,
+#        'client_id': CLIENT_ID,
+#        'client_secret': CLIENT_SECRET
+#    })
+
+#    token_info = response.json()
+#    access_token = token_info['access_token']
+#    session['token'] = access_token
 
     return redirect('/dashboard')
 
