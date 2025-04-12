@@ -24,10 +24,9 @@
 
     {% if track %}
         <div>
-            <h2>{{ track.name }}</h2>
-            <p><strong>Artist:</strong> {{ track.artist }}</p>
-            <p><strong>Album:</strong> {{ track.album }}</p>
-            <img src="{{ track.image }}" alt="Album Cover" width="300">
+            <img src="{{ track.image }}" alt="Album Cover" width="150" style="border:2px solid white">
+            <h2>{{ track.name }}</h2> <p>by {{ track.artist }}</p>
+            <p>[{{ track.album }}]</p>
         </div>
     {% else %}
         <p>No track playing...</p>
