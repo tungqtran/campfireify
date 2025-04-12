@@ -10,6 +10,10 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI = "http://localhost:5000/callback"
 SCOPE = "user-top-read"
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
 @app.route('/login')
 def login():
     auth_url = (
@@ -47,3 +51,6 @@ def dashboard():
     user_data = requests.get('https://api.spotify.com/v1/me', headers = headers).json()
 
     return f"Hello, {user_data['display_name']}!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
