@@ -1,0 +1,31 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background: #f4f4f8;
+}
+h1 {
+    color: #333;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+li {
+    margin: 15px 0;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+img {
+    border-radius: 8px;
+}
+audio {
+    margin-left: 10px;
+}
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #007bff;
+}
