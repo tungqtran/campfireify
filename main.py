@@ -120,7 +120,7 @@ def get_songs_by_tracks(token, tracks_name):
     
 token = get_token() #retrieves the access token
 
-choice = input("Do you want to search for an artist or a track (Enter 'artist' or 'track')?")
+choice = input("Do you want to search for an artist's top 10 songs, or a specific track info (Enter 'artist' or 'track')?")
 
 if choice == "artist":
     artist_name = input("Enter an artist's name: ")
