@@ -89,13 +89,12 @@ def get_songs_by_artist(token, artist_id):
 
 
 
-#CHANGE THIS TO TEST DIFFERENT TRACKS
 
 #search for artists, can be changed to different measures
 def search_for_tracks(token, tracks_name):
     url = "https://api.spotify.com/v1/search"
     headers = get_auth_header(token)
-    query = f"?q={tracks_name}&type=track&limit=1"
+    query = f"?q={tracks_name}&type=track&limit=1" #for track names, specifically
     query_url = url + query
     result = get(query_url, headers=headers)
     json_result = json.loads(result.content)["tracks"]["items"]
@@ -106,7 +105,7 @@ def search_for_tracks(token, tracks_name):
 
 #getter for tracks
 def get_songs_by_tracks(token, tracks_name):
-    url = f"https://api.spotify.com/v1/tracks/{tracks_name}"
+    url = f"https://api.spotify.com/v1/tracks/{tracks_name}" #endpoint for track names
     headers = get_auth_header(token)
     result = get(url, headers=headers)
     json_result = json.loads(result.content)
@@ -122,29 +121,46 @@ def get_songs_by_tracks(token, tracks_name):
     
 token = get_token() #retrieves the access token
 
-#result holds a "dictionary" of the artist's info
-artist_result = search_for_artist(token, "ACDC") #token is passed to authorize, and you can search for specific artist
-artist_id = artist_result["id"] #fetches the specific artist ID from results dictionary
-songs = get_songs_by_artist(token, artist_id) 
+choice = input("Do you want to search for an artist or a track (Enter 'artist' or 'track')?")
 
-#f string is a formatted string
-#printing by song popularity, and top 10 songs
+if choice == "artist":
+    artist_name = input("Enter an artist's name: ")
 
-for song in songs:
- print(f"{song['name']} (Popularity: {song['popularity']})")
+    #result holds a "dictionary" of the artist's info
+    artist_result = search_for_artist(token, artist_name) #token is passed to authorize, and you can search for specific artist
+    artist_id = artist_result["id"] #fetches the specific artist ID from results dictionary
+    songs = get_songs_by_artist(token, artist_id) 
+
+    #f string is a formatted string
+    #printing by song popularity, and top 10 songs
+
+    for song in songs:
+        print(f"{song['name']} (Popularity: {song['popularity']})")
+
+elif choice == "track":
+    user_track_name = input("Enter a track's name: ")
+
+    
+    #for specific tracks
+    track_results = search_for_tracks(token, user_track_name)
+    track_name = track_results["name"]
+    track_artistName = track_results["artists"][0]["name"]
+    track_albumName = track_results["album"]["name"]
+    track_duration = track_results["duration_ms"]/60000
+
+    track_results_string = f"Song Name: {track_name}\nArtist Name: {track_artistName}\nAlbum Name: {track_albumName}\nDuration of Song: {track_duration}"
+    print(track_results_string)
+
+else:
+    print("Invalid input")
 
 
 
 
-#for specific tracks
-track_results = search_for_tracks(token, "Blank Space")
-track_name = track_results["name"]
-track_artistName = track_results["artists"][0]["name"]
-track_albumName = track_results["album"]["name"]
-track_duration = track_results["duration_ms"]/60000
 
-track_results_string = f"Song Name: {track_name}\nArtist Name: {track_artistName}\nAlbum Name: {track_albumName}\nDuration of Song: {track_duration}"
-print(track_results_string)
+
+
+
 
 
 
