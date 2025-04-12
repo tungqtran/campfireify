@@ -4,7 +4,6 @@ import os
 from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
 
 
-
 app = Flask(__name__)
 app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 
@@ -72,7 +71,6 @@ def wrapped():
     )
     top_tracks = tracks_response.json().get('items', [])
 
-
     # Get top artists
     artists_response = requests.get(
         'https://api.spotify.com/v1/me/top/artists?limit=10',
@@ -86,39 +84,6 @@ def wrapped():
         artists=top_artists
     )
 
-@app.route('/marshmallow')
-def marshmallow():
-    token = session.get('token')
-    if not token:
-        return redirect('/login')
-
-    headers = {'Authorization': f'Bearer {token}'}
-
-
-    #TOP 100 track
-     # Get top tracks
-    # Get top tracks
-    tracks_response = requests.get(
-        'https://api.spotify.com/v1/me/top/tracks?limit=50',
-        headers=headers
-    )
-    top_tracks = tracks_response.json().get('items', [])
-
-
-    # Get top artists
-    artists_response = requests.get(
-        'https://api.spotify.com/v1/me/top/artists?limit=10',
-        headers=headers
-    )
-    top_artists = artists_response.json().get('items', [])
-
-    return render_template(
-        'marshmallow.html',
-        tracks=top_tracks,
-        artists=top_artists
-    )
-
-
 @app.route('/campfire')
 def campfire():
     token = session.get('token')
@@ -131,44 +96,32 @@ def campfire():
 
 @app.route('/explorer')
 def explorer_home():
-    return render_template('explorer.html')
+    return render_template('home.html')
 
-@app.route('/search_country')
-def search_country():
+@app.route('/country/<country_code>')
+def country_top_tracks(country_code):
     token = session.get('token')
     if not token:
         return redirect('/login')
 
-    country = request.args.get('country', '').strip()
-    if not country:
-        return "No country provided!"
-
     headers = {'Authorization': f'Bearer {token}'}
-    
-    # Query Spotify for playlists matching "Top 50 COUNTRY"
-    search_query = f"Top 50 {country}"
+
     response = requests.get(
-        f"https://api.spotify.com/v1/search?q={search_query}&type=playlist&limit=1",
+        f'https://api.spotify.com/v1/browse/categories/toplists/playlists?country={country_code}',
         headers=headers
     )
-
-    data = response.json()
-    playlists = data.get('playlists', {}).get('items', [])
-
+    playlists = response.json().get('playlists', {}).get('items', [])
     if not playlists:
-        return f"❌ No Top 50 playlist found for '{country}'. Try another name."
+        tracks = []
+    else:
+        playlist_id = playlists[0]['id']
+        track_response = requests.get(
+            f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks',
+            headers=headers
+        )
+        tracks = track_response.json().get('items', [])
 
-    # Get the first playlist
-    playlist_id = playlists[0]['id']
-
-    # Now fetch tracks from that playlist
-    track_response = requests.get(
-        f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
-        headers=headers
-    )
-    tracks = track_response.json().get('items', [])
-
-    return render_template('tracks.html', country=country, tracks=tracks)
+    return render_template('tracks.html', country=country_code, tracks=tracks)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
