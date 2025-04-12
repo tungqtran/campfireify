@@ -4,6 +4,7 @@ import base64
 from requests import post, get  
 import json
 
+ 
 
 #gets the .env file, to use client_id and client_secret
 load_dotenv()
@@ -16,41 +17,79 @@ client_secret = os.getenv("CLIENT_SECRET")
 #prepares authorization for access tokens for spotify
 def get_token(): 
     auth_string = client_id + ":" + client_secret #creates a combined string for id and secret
-    auth_bytes = auth_string.encode('utf-8')
-    auth_base64 = str(base64.b64encode(auth_bytes),"utf-8")
+    auth_bytes = auth_string.encode('utf-8') #converts this code into bytes
+    auth_base64 = str(base64.b64encode(auth_bytes),"utf-8") #base64 encoded, because Spotify requires this format, then converted back to a UTF-8 String
 
-    url = "https://accounts.spotify.com/api/token"
+    #this url is a specific url from spotify where you can send your credentials and get a specific access token
+    url = "https://accounts.spotify.com/api/token" #endPoint (specific URL where you send requests to get data) for spotify token
+
+    #send http headers (like labels on a package, tells recipient how to handle the package)
     headers = {
-        "Authorization": "Basic " + auth_base64,
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Authorization": "Basic " + auth_base64, #tells spotify who are you; basic means using just username/password (client id and client secert)
+        "Content-Type": "application/x-www-form-urlencoded" #how you data is formatted in request
 
     }
 
-    data = {"grant_type": "client_credentials"}
-    results = post(url, headers=headers, data=data)
-    json_result = json.loads(results.content)
+    #requesting the token, actually making it work!!
+    data = {"grant_type": "client_credentials"} #what kind of token you are asking for, using "Client Credentials Flow." *which is for apps that don't act on behalf of a user (just the app itself)*??
+    
+    #This is like sending a sealed envelope to Spotify saying:
+    #"Hi Spotify, here’s my ID (in the headers), and I’d like a token please (grant_type in the body)."
+    results = post(url, headers=headers, data=data) #sends spotify post request to endpoint
+
+    #results.content gives you the raw data in JSON(java script)
+    #json.load converts into Python
+    json_result = json.loads(results.content) 
+
+    #grabs the actual token
     token = json_result["access_token"]
     return token
 
-#  Authorization header for requests
+#  Authorization header for requests (SUPER IMPORTANT for anything API!!)
 def get_auth_header(token):
-    return {"Authorization": "Bearer " + token}
+    #Authorization: tells who you are
+    #Bearer: type of token you are using
+    return {"Authorization": "Bearer " + token} #pass into everyheader to prove you can make the request
 
  
 #search for artists, can be changed to different measures
 def search_for_artist(token, artist_name):
-    url = "https://api.spotify.com/v1/search"
-    headers = get_auth_header(token)
-    query = f"?q={artist_name}&type=artist&limit=1"
-    query_url = url + query
-    result = get(query_url, headers=headers)
-    json_result = json.loads(result.content)["artists"]["items"]
-    if len(json_result) == 0:
+    url = "https://api.spotify.com/v1/search" #endpoint for searching artists, albums, tracks, etc
+
+    headers = get_auth_header(token) #makes the authorization header
+
+    #q={artist_name}: the search term
+    #type=artist: you specifically searching for artists
+    #limit=1: only return 1 result
+    query = f"?q={artist_name}&type=artist&limit=1" 
+
+    query_url = url + query #formats a full URL request
+    result = get(query_url, headers=headers) #sends a GET request with full URL and headers
+    json_result = json.loads(result.content)["artists"]["items"] #converts JSON code into Python; gives you matching artists (items: name, id, genre, etc)
+    
+    #edge case: no artists found
+    if len(json_result) == 0: 
         print("No artist exists")
         return None
-    return json_result[0]
+    return json_result[0] #only returns the first since the limit is 1
   
     print(json_result)
+
+
+
+#looking for a specific artist, passing in artist_id, then findng its top tracks, any 2 digit country code
+def get_songs_by_artist(token, artist_id):
+    url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=US" #builds URL, spotify endpoint with specified country
+   
+   #same code as before, creating header, parsing JSON
+    headers = get_auth_header(token) 
+    result = get(url, headers=headers)
+    json_result = json.loads(result.content)["tracks"] #pulls specifically the tracks of "top tracks of the country"
+    return json_result
+
+
+
+#CHANGE THIS TO TEST DIFFERENT TRACKS
 
 #search for artists, can be changed to different measures
 def search_for_tracks(token, tracks_name):
@@ -74,30 +113,29 @@ def get_songs_by_tracks(token, tracks_name):
     return json_result
 
 
-#looking for a specific artist, passing in artist_id, then findng its top tracks, any 2 digit country code
-def get_songs_by_artist(token, artist_id):
-    url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=US"
-    headers = get_auth_header(token)
-    result = get(url, headers=headers)
-    json_result = json.loads(result.content)["tracks"]
-    return json_result
 
 
+
+
+#MAIN? running and applying the methods
     
-token = get_token()
-result = search_for_artist(token, "ACDC") #change to different artists to test or view songs
-artist_id = result["id"]
-songs = get_songs_by_artist(token, artist_id)
+token = get_token() #retrieves the access token
 
-#printing top 10 songs, in country by specific artist (changes by year or country)
-for idx,song in enumerate(songs):
-    print(f"{idx + 1}. {song['name']}") 
+#result holds a "dictionary" of the artist's info
+result = search_for_artist(token, "ACDC") #token is passed to authorize, and you can search for specific artist
+artist_id = result["id"] #fetches the specific artist ID from results dictionary
+songs = get_songs_by_artist(token, artist_id) 
 
 
-#tracks = search_for_tracks(token, "Blinding Lights")
 
-#for t in tracks:
-   # print(f"{t['name']} by {t['artists'][0]['name']} — URI: {t['uri']}")
+
+#f string is a formatted string
+#printing by song popularity, and top 10 songs
+for song in songs:
+    print(f"{song['name']} (Popularity: {song['popularity']})")
+
+
+ 
 
 
 #print(result["name"])
