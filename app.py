@@ -131,32 +131,44 @@ def campfire():
 
 @app.route('/explorer')
 def explorer_home():
-    return render_template('home.html')
+    return render_template('explorer.html')
 
-@app.route('/country/<country_code>')
-def country_top_tracks(country_code):
+@app.route('/search_country')
+def search_country():
     token = session.get('token')
     if not token:
         return redirect('/login')
 
-    headers = {'Authorization': f'Bearer {token}'}
+    country = request.args.get('country', '').strip()
+    if not country:
+        return "No country provided!"
 
+    headers = {'Authorization': f'Bearer {token}'}
+    
+    # Query Spotify for playlists matching "Top 50 COUNTRY"
+    search_query = f"Top 50 {country}"
     response = requests.get(
-        f'https://api.spotify.com/v1/browse/categories/toplists/playlists?country={country_code}',
+        f"https://api.spotify.com/v1/search?q={search_query}&type=playlist&limit=1",
         headers=headers
     )
-    playlists = response.json().get('playlists', {}).get('items', [])
-    if not playlists:
-        tracks = []
-    else:
-        playlist_id = playlists[0]['id']
-        track_response = requests.get(
-            f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks',
-            headers=headers
-        )
-        tracks = track_response.json().get('items', [])
 
-    return render_template('tracks.html', country=country_code, tracks=tracks)
+    data = response.json()
+    playlists = data.get('playlists', {}).get('items', [])
+
+    if not playlists:
+        return f"❌ No Top 50 playlist found for '{country}'. Try another name."
+
+    # Get the first playlist
+    playlist_id = playlists[0]['id']
+
+    # Now fetch tracks from that playlist
+    track_response = requests.get(
+        f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
+        headers=headers
+    )
+    tracks = track_response.json().get('items', [])
+
+    return render_template('tracks.html', country=country, tracks=tracks)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
