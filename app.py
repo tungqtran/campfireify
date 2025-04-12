@@ -2,7 +2,8 @@ from flask import Flask, redirect, request, session, render_template
 import requests
 import os
 from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
-
+from country_playlists import COUNTRY_PLAYLISTS
+import json
 
 app = Flask(__name__)
 app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
@@ -106,20 +107,21 @@ def country_top_tracks(country_code):
 
     headers = {'Authorization': f'Bearer {token}'}
 
-    response = requests.get(
-        f'https://api.spotify.com/v1/browse/categories/toplists/playlists?country={country_code}',
+    playlist_id = COUNTRY_PLAYLISTS.get(country_code.upper())
+    if not playlist_id:
+        return f"🚫 Sorry — no known Top 50 playlist for country code: {country_code}"
+
+    track_response = requests.get(
+        f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks',
         headers=headers
     )
-    playlists = response.json().get('playlists', {}).get('items', [])
-    if not playlists:
-        tracks = []
-    else:
-        playlist_id = playlists[0]['id']
-        track_response = requests.get(
-            f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks',
-            headers=headers
-        )
-        tracks = track_response.json().get('items', [])
+
+    if track_response.status_code == 401:
+        session.pop('token', None)  # clear old token
+        return redirect('/login')
+
+    tracks = track_response.json().get('items', [])
+
 
     return render_template('tracks.html', country=country_code, tracks=tracks)
 
