@@ -3,7 +3,6 @@ import os
 import base64
 from requests import post, get  
 import json
-
  
 
 #gets the .env file, to use client_id and client_secret
