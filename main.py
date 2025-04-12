@@ -4,18 +4,18 @@ import base64
 from requests import post, get  
 import json
 
-print("you suck")
 
+#gets the .env file, to use client_id and client_secret
 load_dotenv()
 
-client_id = os.getenv("CLIENT_ID")
+#gets the environment variables and assigns it to local variable
+client_id = os.getenv("CLIENT_ID") 
 client_secret = os.getenv("CLIENT_SECRET")
 
-print(client_id,client_secret)
 
-#authorization tokens for spotify
-def get_token():
-    auth_string = client_id + ":" + client_secret
+#prepares authorization for access tokens for spotify
+def get_token(): 
+    auth_string = client_id + ":" + client_secret #creates a combined string for id and secret
     auth_bytes = auth_string.encode('utf-8')
     auth_base64 = str(base64.b64encode(auth_bytes),"utf-8")
 
