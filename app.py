@@ -2,6 +2,7 @@ from flask import Flask, redirect, request, session, render_template
 import requests
 import os
 
+
 app = Flask(__name__)
 app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 
@@ -81,14 +82,14 @@ def wrapped():
 
     # Get top tracks
     tracks_response = requests.get(
-        'https://api.spotify.com/v1/me/top/tracks?limit=5',
+        'https://api.spotify.com/v1/me/top/tracks?limit=10',
         headers=headers
     )
     top_tracks = tracks_response.json().get('items', [])
 
     # Get top artists
     artists_response = requests.get(
-        'https://api.spotify.com/v1/me/top/artists?limit=5',
+        'https://api.spotify.com/v1/me/top/artists?limit=10',
         headers=headers
     )
     top_artists = artists_response.json().get('items', [])
@@ -98,6 +99,8 @@ def wrapped():
         tracks=top_tracks,
         artists=top_artists
     )
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

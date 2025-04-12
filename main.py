@@ -3,6 +3,9 @@ import os
 import base64
 from requests import post, get  
 import json
+
+
+
  
 
 #gets the .env file, to use client_id and client_secret
@@ -117,7 +120,7 @@ def get_songs_by_tracks(token, tracks_name):
 
 
 #MAIN? running and applying the methods
-    
+  
 token = get_token() #retrieves the access token
 
 choice = input("Do you want to search for an artist's top 10 songs, or a specific track info (Enter 'artist' or 'track')?")
@@ -152,6 +155,10 @@ elif choice == "track":
 
 else:
     print("Invalid input")
+
+
+
+
 
 
 

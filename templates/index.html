@@ -1,13 +1,93 @@
 <!DOCTYPE html>
 <html lang = "en">
 
- 
+<style>
+    .banner {
+      background-color: black ;  
+      color: white;
+      text-align: center;
+      padding: 35px 0;
+      font-size: 3.5em;
+      font-weight: bold;
+      font-family: 'Segoe UI', sans-serif;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 
-    <body>
-        LOGIN BUTTON: 
-        <a href="/login">
-            [Spotify Login]
-        </a>
+    <body style = "background-color:#1DB954";>
+    
+
+        <div class="banner">
+            🎧 Your Spotify Wrapped
+          </div>
+
+         
+
+          <a href="/login" class="button">Login Here</a>
+          <a href="/login" class="button">View Public Data</a>
+
+
+
+
+          <style>
+            .container {
+              display: flex;  /* This will make the child divs line up in a row */
+              justify-content: flex-start;  
+              gap: 15px;
+              align-items: flex-start;  /* Align them to the top */
+            }
+          
+            .box {
+              background-color: white;
+              padding: 10px;
+              border-radius: 5px;
+              width: 300px;
+              position:relative; left: 450px;top:0px
+            }
+          </style>
+          
+          <div class="container">
+            <div class="box">
+              Welcome to your personal Spotify Wrapped experience!
+              Here you can explore your top tracks and artists of the year.
+              To get started, click the "Login" button to access your personal Spotify Wrapped data.
+          
+              <ul>
+                <li> Your Top Artists</li>
+                <li> Your Top Songs</li>
+                <li> Your Top Albums</li>
+              </ul>
+            </div>
+          
+            <div class="box">
+              Additionally, along with exploring your top tracks and artists, you can also view public data, such as:
+          
+              <ul>
+                <li> Top Songs by Artists</li>
+                <li> Specific Track Information</li>
+              </ul>
+            </div>
+          </div>
+  <style>
+    .button {
+      display: inline-block;
+      padding: 20px 30px;
+      background-color: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      
+      position:relative; left: 600px;top:300px
+    }
+    .button:hover {
+      background-color: #17a44a;
+    }
+  </style>
+
+
+
+         
     </body>
 
 
