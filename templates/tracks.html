@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Tracks in {{ country }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>🎶 Top Tracks in {{ country }}</h1>
+
+    {% if tracks %}
+        <ul>
+            {% for item in tracks %}
+                {% set track = item['track'] %}
+                <li>
+                    <img src="{{ track.album.images[0].url }}" width="50" alt="Album cover">
+                    <strong>{{ track.name }}</strong> by {{ track.artists[0].name }}
+                    {% if track.preview_url %}
+                        <audio controls src="{{ track.preview_url }}"></audio>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No top tracks found for this country. 🎧</p>
+    {% endif %}
+
+    <a href="/explorer">⬅️ Pick Another Country</a>
+</body>
+</html>
