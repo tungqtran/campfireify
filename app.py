@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, session, render_template
+from flask import Flask, redirect, request, session, render_template, jsonify
 import requests
 import os
 
@@ -83,15 +83,53 @@ def wrapped():
         artists=top_artists
     )
 
+
+
+# campfire method and campfire html represent the currently played track for the user logged in 
 @app.route('/campfire')
 def campfire():
     token = session.get('token')
+    
     if not token:
         return redirect('/login')
-    
+
+
     headers = {'Authorization': f'Bearer {token}'}
 
-    return render_template('campfire.html')
+    spotify_api_response = requests.get(
+        'https://api.spotify.com/v1/me/player/currently-playing',
+        headers = headers
+    )
+
+    if spotify_api_response.status_code == 200:
+        data = spotify_api_response.json()
+        if data.get('item'): #if track playing
+            track = {
+                'name': data['item']['name'],
+                'artist': ', '.join([artist['name'] for artist in data['item']['artists']]),
+                'album': data['item']['album']['name'],
+                'image': data['item']['album']['images'][0]['url']
+            }
+            
+        else: # no track playing
+            track = {
+                'name': "no track",
+                'artist': "n/a",
+                'album': "n/a",
+                'image': "https://i.redd.it/kra8id3at5ld1.png"
+            }
+            
+    else: # a status =/= 200 means something wrong happened (bad token, etc.)
+        track = {
+            'name': "status != 200",
+            'artist': "n/a",
+            'album': "n/a",
+            'image': "https://i.redd.it/kra8id3at5ld1.png"
+        }
+        
+    return render_template('campfire.html', track=track)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
