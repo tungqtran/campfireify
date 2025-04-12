@@ -3,10 +3,10 @@ import requests
 import os
 
 app = Flask(__name__)
-app.secret_key = os.getenv("OUR_SECRET_KEY")
+app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+CLIENT_ID = "dafa39bb45824babbe9bc69dd0b9b7d4"
+CLIENT_SECRET = "c12c7c46202f4bd2962dc576ff2f3dc3"
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
 SCOPE = "user-top-read"
 
