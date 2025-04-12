@@ -7,7 +7,7 @@ app.secret_key = os.getenv("OUR_SECRET_KEY")
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-REDIRECT_URI = "http://localhost:5000/callback"
+REDIRECT_URI = "http://127.0.0.1:5000/callback"
 SCOPE = "user-top-read"
 
 @app.route('/')
@@ -20,7 +20,7 @@ def login():
         "https://accounts.spotify.com/authorize"
         "?client_id=" + CLIENT_ID +
         "&response_type=code"
-        "&redirect_uri" + REDIRECT_URI +
+        "&redirect_uri=" + REDIRECT_URI +
         "&scope=" + SCOPE
     )
 
@@ -32,34 +32,34 @@ def callback():
 
     token_url = 'https://accounts.spotify.com/api/token'
 
-    payload = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': REDIRECT_URI,  
-        'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET
-    }
+    # payload = {
+    #     'grant_type': 'authorization_code',
+    #     'code': code,
+    #     'redirect_uri': REDIRECT_URI,  
+    #     'client_id': CLIENT_ID,
+    #     'client_secret': CLIENT_SECRET
+    # }
 
-    response = requests.post(token_url, data=payload)
-    token_info = response.json()
+    # response = requests.post(token_url, data=payload)
+    # token_info = response.json()
     
-    session['token'] = token_info.get('access_token')
+    # session['token'] = token_info.get('access_token')
 
-    return f"Success! Token: {session['token']}"
+    # return redirect('/dashboard')
 
 
 
-#    response = requests.post("https://accounts.spotify.com/api/token", data = {
-#        'grant_type': 'authorization_code',
-#        'code': code,
-#        'redirect_uri': REDIRECT_URI,
-#        'client_id': CLIENT_ID,
-#        'client_secret': CLIENT_SECRET
-#    })
+    response = requests.post("https://accounts.spotify.com/api/token", data = {
+       'grant_type': 'authorization_code',
+       'code': code,
+       'redirect_uri': REDIRECT_URI,
+       'client_id': CLIENT_ID,
+       'client_secret': CLIENT_SECRET
+   })
 
-#    token_info = response.json()
-#    access_token = token_info['access_token']
-#    session['token'] = access_token
+    token_info = response.json()
+    access_token = token_info['access_token']
+    session['token'] = access_token
 
     return redirect('/dashboard')
 
