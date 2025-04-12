@@ -1,6 +1,7 @@
 from flask import Flask, redirect, request, session, render_template
 import requests
 import os
+from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
 
 
 app = Flask(__name__)
@@ -9,7 +10,7 @@ app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 CLIENT_ID = "dafa39bb45824babbe9bc69dd0b9b7d4"
 CLIENT_SECRET = "c12c7c46202f4bd2962dc576ff2f3dc3"
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
-SCOPE = "user-top-read user-read-recently-played user-library-read user-read-currently-playing"
+SCOPE = "user-top-read user-read-recently-played user-library-read"
 
 @app.route('/')
 def home():
@@ -32,6 +33,10 @@ def callback():
     code = request.args.get('code')
 
     token_url = 'https://accounts.spotify.com/api/token'
+
+  
+
+
 
     response = requests.post("https://accounts.spotify.com/api/token", data = {
        'grant_type': 'authorization_code',
@@ -83,15 +88,26 @@ def wrapped():
         artists=top_artists
     )
 
-@app.route('/campfire')
-def campfire():
-    token = session.get('token')
-    if not token:
-        return redirect('/login')
-    
-    headers = {'Authorization': f'Bearer {token}'}
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        choice = request.form['choice']
+        query = request.form['query']
+        token = get_token()
 
-    return render_template('campfire.html')
+        if choice == 'artist':
+            artist_result = search_for_artist(token, query)
+            artist_id = artist_result["id"]
+            songs = get_songs_by_artist(token, artist_id)
+            return render_template('results.html', choice='artist', songs=songs, artist=query)
+
+        elif choice == 'track':
+            track = search_for_tracks(token, query)
+            return render_template('results.html', choice='track', track=track)
+
+    return render_template('search.html')  # GET request, show the form
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
