@@ -95,7 +95,7 @@ def get_songs_by_artist(token, artist_id):
 def search_for_tracks(token, tracks_name):
     url = "https://api.spotify.com/v1/search"
     headers = get_auth_header(token)
-    query = f"?q={tracks_name}&type=track&limit=5"
+    query = f"?q={tracks_name}&type=track&limit=1"
     query_url = url + query
     result = get(query_url, headers=headers)
     json_result = json.loads(result.content)["tracks"]["items"]
@@ -106,11 +106,12 @@ def search_for_tracks(token, tracks_name):
 
 #getter for tracks
 def get_songs_by_tracks(token, tracks_name):
-    url = f"https://api.spotify.com/v1/artists/{tracks_name}/top-tracks?country=US"
+    url = f"https://api.spotify.com/v1/tracks/{tracks_name}"
     headers = get_auth_header(token)
     result = get(url, headers=headers)
     json_result = json.loads(result.content)
     return json_result
+
 
 
 
@@ -122,17 +123,34 @@ def get_songs_by_tracks(token, tracks_name):
 token = get_token() #retrieves the access token
 
 #result holds a "dictionary" of the artist's info
-result = search_for_artist(token, "ACDC") #token is passed to authorize, and you can search for specific artist
-artist_id = result["id"] #fetches the specific artist ID from results dictionary
+artist_result = search_for_artist(token, "ACDC") #token is passed to authorize, and you can search for specific artist
+artist_id = artist_result["id"] #fetches the specific artist ID from results dictionary
 songs = get_songs_by_artist(token, artist_id) 
-
-
-
 
 #f string is a formatted string
 #printing by song popularity, and top 10 songs
+
 for song in songs:
-    print(f"{song['name']} (Popularity: {song['popularity']})")
+ print(f"{song['name']} (Popularity: {song['popularity']})")
+
+
+
+
+#for specific tracks
+track_results = search_for_tracks(token, "Blank Space")
+track_name = track_results["name"]
+track_artistName = track_results["artists"][0]["name"]
+track_albumName = track_results["album"]["name"]
+track_duration = track_results["duration_ms"]/60000
+
+track_results_string = f"Song Name: {track_name}\nArtist Name: {track_artistName}\nAlbum Name: {track_albumName}\nDuration of Song: {track_duration}"
+print(track_results_string)
+
+
+
+
+
+
 
 
  
