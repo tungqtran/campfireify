@@ -4,6 +4,8 @@ import base64
 from requests import post, get  
 import json
 
+print("you suck")
+
 load_dotenv()
 
 client_id = os.getenv("CLIENT_ID")
