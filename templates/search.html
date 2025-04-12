@@ -17,15 +17,16 @@
     }
 
     .labels{
-        font-size: 2em;
+        font-size: 1.5em;
         font-weight: bold;
-        position: relative;left: 500px;top:100px;
+        position: relative;left: 450px;top:50px;
         background-color: white;
         width: 500px;
+        color:goldenrod
     }
 
     .text{
-        position: relative;left: 500px;top:100px;
+        position: relative;left: 450px;top:50px;
         background-color: white;
         width:500px;
     }
@@ -33,31 +34,34 @@
 
 
 <body style="background-color:#1DB954;">
-    
-
     <div class="banner">
-        🎧 Search Spotify
-      </div>
+      🎧 Search Spotify
+    </div>
+  
+    <h3 style="text-align: center; color: white;">Explore Artists and Tracks</h3>
+  
     <form method="POST" action="/search">
-        <div class="labels">
-            <label>Choose:</label><br>
-        </div>
-       
-        <div class="text">
-            <input type="radio" name="choice" value="artist" required> Artist<br>
-            <input type="radio" name="choice" value="track"> Track<br><br>
-        </div>
-        
-
-        <div class="labels">
-            <label for="query">Enter Artist or Track Name:</label><br>
-        </div>
-       
-        <div class="text">
-            <input type="text" id="query" name="query" required><br><br>
-            <input type="submit" value="Search">
-            </div>
-       
+      <div class="labels">
+        <label>Choose:</label><br>
+      </div>
+  
+      <div class="text">
+        <label for="spotify-options"></label>
+        <select id="spotify-options" name="choice" required>
+          <option value="artist">Artist</option>
+          <option value="track">Track</option>
+        </select>
+      </div>
+  
+      <div class="labels">
+        <label for="query"><br>Enter Artist or Track Name:</label><br>
+      </div>
+  
+      <div class="text">
+        <input type="text" id="query" name="query" required><br><br>
+        <input type="submit" value="Search">
+      </div>
     </form>
+  
 </body>
 </html>

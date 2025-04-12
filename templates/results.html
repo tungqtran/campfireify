@@ -86,6 +86,16 @@
       font-family: 'Segoe UI', sans-serif;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
+    p{
+        background-color: white;
+        text-align: center;
+        padding: 10px;
+        width : 500px;
+        position:relative;left: 400px;top:30px;
+        border-radius: 5px;
+    }
+   
 </style>
 
 <body style="background-color:#1DB954;">
@@ -93,21 +103,21 @@
 
     {% if choice == 'artist' %}
     <div class="banner" style="text-align: center;">
-        🎧 Top Songs By <span style="color: goldenrod;">{{ artist|title }}</span>:
+      🎧 Top Songs By <span style="color: goldenrod;">{{ artist|title }}</span>:
     </div>
-        <ol>
-            {% for song in songs %}
-                <li class="song-item">{{ song.name }} (Popularity: {{ song.popularity }})</li>
-            {% endfor %}
-        </ol>
-    {% elif choice == 'track' %}
+    <ol>
+      {% for song in songs %}
+        <li class="song-item">{{ song.name }} (Popularity: {{ song.popularity }})</li>
+      {% endfor %}
+    </ol>
+  
+  {% elif choice == 'track' %}
     <div class="banner" style="text-align: center;">
-        🎧 Track Info For <span style="color: goldenrod;">{{ track.name|title }}</span>:
+      🎧 Track Info For <span style="color: goldenrod;">{{ track.name|title }}</span>:
     </div>
-     
-        <p>Artist: {{ track.artists[0].name }}</p>
-        <p>Album: {{ track.album.name }}</p>
-        <p>Duration: {{ (track.duration_ms / 60000)|round(2) }} minutes</p>
-    {% endif %}
+    <p><b>Artist:</b> {{ track.artists[0].name }}</p>
+    <p><b>Album:</b> {{ track.album.name }}</p>
+    <p><b>Duration:</b> {{ (track.duration_ms / 60000)|round(2) }} minutes</p>
+  {% endif %}
 </body>
 </html>
