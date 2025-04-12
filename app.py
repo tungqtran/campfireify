@@ -8,7 +8,7 @@ app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 CLIENT_ID = "dafa39bb45824babbe9bc69dd0b9b7d4"
 CLIENT_SECRET = "c12c7c46202f4bd2962dc576ff2f3dc3"
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
-SCOPE = "user-top-read"
+SCOPE = "user-top-read user-read-recently-played user-library-read"
 
 @app.route('/')
 def home():
@@ -69,7 +69,36 @@ def dashboard():
     headers = {'Authorization': f'Bearer {token}'}
     user_data = requests.get('https://api.spotify.com/v1/me', headers = headers).json()
 
-    return f"Hello, {user_data['display_name']}!"
+    return render_template('dashboard.html', user=user_data)
+
+@app.route('/wrapped')
+def wrapped():
+    token = session.get('token')
+    if not token:
+        return redirect('/login')
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    # Get top tracks
+    tracks_response = requests.get(
+        'https://api.spotify.com/v1/me/top/tracks?limit=5',
+        headers=headers
+    )
+    top_tracks = tracks_response.json().get('items', [])
+
+    # Get top artists
+    artists_response = requests.get(
+        'https://api.spotify.com/v1/me/top/artists?limit=5',
+        headers=headers
+    )
+    top_artists = artists_response.json().get('items', [])
+
+    return render_template(
+        'wrapped.html',
+        tracks=top_tracks,
+        artists=top_artists
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
+

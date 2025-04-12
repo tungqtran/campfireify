@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Spotify Wrapped</title>
+</head>
+<body>
+    <h1>🎧 Your Spotify Wrapped </h1>
+
+    <h2>Top Tracks</h2>
+    <ol>
+        {% for track in tracks %}
+            <li>
+                <strong>{{ track.name }}</strong> by {{ track.artists[0].name }}<br>
+                <em>Album:</em> {{ track.album.name }}<br>
+                {% if track.album.images %}
+                    <img src="{{ track.album.images[0].url }}" width="150">
+                {% endif %}
+                <br><br>
+            </li>
+        {% endfor %}
+    </ol>
+
+    <h2>Top Artists</h2>
+    <ol>
+        {% for artist in artists %}
+            <li>
+                <strong>{{ artist.name }}</strong><br>
+                Genres: {{ artist.genres | join(", ") }}<br>
+                {% if artist.images %}
+                    <img src="{{ artist.images[0].url }}" width="150">
+                {% endif %}
+                <br><br>
+            </li>
+        {% endfor %}
+    </ol>
+</body>
+</html>
