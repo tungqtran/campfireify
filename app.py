@@ -4,13 +4,14 @@ import os
 from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
 
 
+
 app = Flask(__name__)
 app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 
 CLIENT_ID = "dafa39bb45824babbe9bc69dd0b9b7d4"
 CLIENT_SECRET = "c12c7c46202f4bd2962dc576ff2f3dc3"
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
-SCOPE = "user-top-read user-read-recently-played user-library-read"
+SCOPE = "user-top-read user-read-recently-played user-library-read user-read-currently-playing"
 
 @app.route('/')
 def home():
@@ -33,10 +34,6 @@ def callback():
     code = request.args.get('code')
 
     token_url = 'https://accounts.spotify.com/api/token'
-
-  
-
-
 
     response = requests.post("https://accounts.spotify.com/api/token", data = {
        'grant_type': 'authorization_code',
@@ -88,6 +85,45 @@ def wrapped():
         artists=top_artists
     )
 
+@app.route('/campfire')
+def campfire():
+    token = session.get('token')
+    if not token:
+        return redirect('/login')
+    
+    headers = {'Authorization': f'Bearer {token}'}
+
+    return render_template('campfire.html')
+
+@app.route('/explorer')
+def explorer_home():
+    return render_template('home.html')
+
+@app.route('/country/<country_code>')
+def country_top_tracks(country_code):
+    token = session.get('token')
+    if not token:
+        return redirect('/login')
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    response = requests.get(
+        f'https://api.spotify.com/v1/browse/categories/toplists/playlists?country={country_code}',
+        headers=headers
+    )
+    playlists = response.json().get('playlists', {}).get('items', [])
+    if not playlists:
+        tracks = []
+    else:
+        playlist_id = playlists[0]['id']
+        track_response = requests.get(
+            f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks',
+            headers=headers
+        )
+        tracks = track_response.json().get('items', [])
+
+    return render_template('tracks.html', country=country_code, tracks=tracks)
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
@@ -108,7 +144,5 @@ def search():
     return render_template('search.html')  # GET request, show the form
 
 
-
 if __name__ == '__main__':
     app.run(debug=True)
-
