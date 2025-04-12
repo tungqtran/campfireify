@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Spotify</title>
+</head>
+
+<style>
+    .banner {
+      background-color: black ;  
+      color: white;
+      text-align: center;
+      padding: 35px 0;
+      font-size: 3.5em;
+      font-weight: bold;
+      font-family: 'Segoe UI', sans-serif;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .labels{
+        font-size: 2em;
+        font-weight: bold;
+        position: relative;left: 500px;top:100px;
+        background-color: white;
+        width: 500px;
+    }
+
+    .text{
+        position: relative;left: 500px;top:100px;
+        background-color: white;
+        width:500px;
+    }
+  </style>
+
+
+<body style="background-color:#1DB954;">
+    
+
+    <div class="banner">
+        🎧 Search Spotify
+      </div>
+    <form method="POST" action="/search">
+        <div class="labels">
+            <label>Choose:</label><br>
+        </div>
+       
+        <div class="text">
+            <input type="radio" name="choice" value="artist" required> Artist<br>
+            <input type="radio" name="choice" value="track"> Track<br><br>
+        </div>
+        
+
+        <div class="labels">
+            <label for="query">Enter Artist or Track Name:</label><br>
+        </div>
+       
+        <div class="text">
+            <input type="text" id="query" name="query" required><br><br>
+            <input type="submit" value="Search">
+            </div>
+       
+    </form>
+</body>
+</html>

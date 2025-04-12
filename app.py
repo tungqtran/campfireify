@@ -1,6 +1,7 @@
 from flask import Flask, redirect, request, session, render_template
 import requests
 import os
+from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
 
 
 app = Flask(__name__)
@@ -86,6 +87,25 @@ def wrapped():
         tracks=top_tracks,
         artists=top_artists
     )
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        choice = request.form['choice']
+        query = request.form['query']
+        token = get_token()
+
+        if choice == 'artist':
+            artist_result = search_for_artist(token, query)
+            artist_id = artist_result["id"]
+            songs = get_songs_by_artist(token, artist_id)
+            return render_template('results.html', choice='artist', songs=songs, artist=query)
+
+        elif choice == 'track':
+            track = search_for_tracks(token, query)
+            return render_template('results.html', choice='track', track=track)
+
+    return render_template('search.html')  # GET request, show the form
 
 
 

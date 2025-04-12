@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+</head>
+<body>
+    {% if choice == 'artist' %}
+        <h2>Top Songs by {{ artist }}</h2>
+        <ul>
+        {% for song in songs %}
+            <li>{{ song.name }} (Popularity: {{ song.popularity }})</li>
+        {% endfor %}
+        </ul>
+    {% elif choice == 'track' %}
+        <h2>Track Info</h2>
+        <p>Song: {{ track.name }}</p>
+        <p>Artist: {{ track.artists[0].name }}</p>
+        <p>Album: {{ track.album.name }}</p>
+        <p>Duration: {{ (track.duration_ms / 60000)|round(2) }} minutes</p>
+    {% endif %}
+</body>
+</html>
