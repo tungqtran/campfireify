@@ -9,7 +9,7 @@ app.secret_key = "ieajsofeur8032iwjfw9da0s9du9as8409qwujadc"
 CLIENT_ID = "dafa39bb45824babbe9bc69dd0b9b7d4"
 CLIENT_SECRET = "c12c7c46202f4bd2962dc576ff2f3dc3"
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
-SCOPE = "user-top-read user-read-recently-played user-library-read"
+SCOPE = "user-top-read user-read-recently-played user-library-read user-read-currently-playing"
 
 @app.route('/')
 def home():
@@ -32,23 +32,6 @@ def callback():
     code = request.args.get('code')
 
     token_url = 'https://accounts.spotify.com/api/token'
-
-    # payload = {
-    #     'grant_type': 'authorization_code',
-    #     'code': code,
-    #     'redirect_uri': REDIRECT_URI,  
-    #     'client_id': CLIENT_ID,
-    #     'client_secret': CLIENT_SECRET
-    # }
-
-    # response = requests.post(token_url, data=payload)
-    # token_info = response.json()
-    
-    # session['token'] = token_info.get('access_token')
-
-    # return redirect('/dashboard')
-
-
 
     response = requests.post("https://accounts.spotify.com/api/token", data = {
        'grant_type': 'authorization_code',
@@ -100,7 +83,15 @@ def wrapped():
         artists=top_artists
     )
 
+@app.route('/campfire')
+def campfire():
+    token = session.get('token')
+    if not token:
+        return redirect('/login')
+    
+    headers = {'Authorization': f'Bearer {token}'}
 
+    return render_template('campfire.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
