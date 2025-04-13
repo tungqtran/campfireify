@@ -88,6 +88,18 @@ def wrapped():
 
 @app.route('/campfire')
 def campfire():
+    track = get_curr_track()
+    return render_template('campfire.html', track=track)
+
+@app.route('/campfire-helper')
+def campfire_helper():
+    track = get_curr_track()
+    if track:
+        print(track)
+        return jsonify(track)
+    return jsonify({'error': 'errors!!!'})
+
+def get_curr_track():
     token = session.get('token')
     
     if not token:
@@ -127,7 +139,13 @@ def campfire():
             'image': "https://i.redd.it/kra8id3at5ld1.png"
         }
         
-    return render_template('campfire.html', track=track)
+    return track
+
+
+
+
+
+
 
 
 

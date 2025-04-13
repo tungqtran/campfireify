@@ -48,6 +48,26 @@
             opacity: 1;
         }
     </style>
+
+    <script>
+        function fetchTrack() {
+
+            fetch('/campfire-helper')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Current track data:', data);
+
+                    document.getElementById('track.image').src = data.track.image;
+                    document.getElementById('track.name').innerHTML = data.track.name;
+                    document.getElementById('track.artist').innerHTML = data.track.artist;
+                    document.getElementById('track.album').innerHTML = data.track.album;
+                });
+        }
+
+        window.onload = fetchTrack;
+        setInterval(fetchTrack, 5000);
+    </script>
+
 </head>
 
 <body>
@@ -96,64 +116,3 @@
 </body>
 
 </html>
-
-<!-- <div id="track-info">
-    <p> Using the firestarter... </p>
-</div> -->
-
-<!-- <script>
-    async function fetchCurrentlyPlaying() {
-        const response = await fetch('/campfire');
-        const data = await response.json();
-
-        if (data.error) {
-            document.getElementById('track-info').innerHTML = "<p> No wood for your campfire! (No track playing...) </p>";
-        } else {
-            document.getElementById('track-info').innerHTML = `
-                <h2>${data.name}</h2>
-                <p><strong>Artist(s):</strong> ${data.artist}</p>
-                <p><strong>Album:</strong> ${data.album}</p>
-                <img src = "${data.image}" alt = "${data.name}" style = "width: 200px;">
-            `;
-        }
-    }
-
-    setInterval(fetchCurrentlyPlaying, 10000); // periodically fetch every 10 seconds
-
-    fetchCurrentlyPlaying(); // on page load
-</script> -->
-
-<!-- <body>
-    <div id="track-info">
-        {% if track %}
-            <h2 id="track-name">{{ track.name }}</h2>
-            <p id="track-artist">{{ track.artist }}</p>
-            <p id="track-album">{{ track.album }}</p>
-            <img id="track-image" src="{{ track.img }}" style="width: 200px; display: none;">
-        {% else %}
-            <p> no track playing... </p>
-        {% endif %}
-    </div>
-</body>
-
-<script>
-    function updateTrack() {
-        fetch('/campfiresecond')
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                document.getElementById('track-info').innerHTML = "<p> No wood for your campfire! (No track playing...) </p>";
-            } else {
-                document.getElementById('track-name').textContent = data.name;
-                document.getElementById('track-artist').textContent = 'Artists: ' + data.artist;
-                document.getElementById('track-album').textContent = 'Album: ' + data.album;
-                document.getElementById('track-image').src = data.image;
-                document.getElementById('track-image').style.display = 'block';
-            }
-        })
-    }
-
-    setInterval(updateTrack, 5000);
-
-    window.onload = updateTrack;
-</script> -->
