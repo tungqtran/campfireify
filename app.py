@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, session, render_template, jsonify
+from flask import Flask, redirect, request, session, render_template
 import requests
 import os
 from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
@@ -55,7 +55,7 @@ def dashboard():
     headers = {'Authorization': f'Bearer {token}'}
     user_data = requests.get('https://api.spotify.com/v1/me', headers = headers).json()
 
-    return render_template('dashboard.html', user=user_data)
+    return render_template('dashboard.html', user=user_data) 
 
 @app.route('/wrapped')
 def wrapped():
@@ -85,6 +85,40 @@ def wrapped():
         tracks=top_tracks,
         artists=top_artists
     )
+
+@app.route('/marshmallow')
+def marshmallow():
+    token = session.get('token')
+    if not token:
+        return redirect('/login')
+
+    headers = {'Authorization': f'Bearer {token}'}
+    
+
+
+    #TOP 100 track
+     # Get top tracks
+    # Get top tracks
+    tracks_response = requests.get(
+        'https://api.spotify.com/v1/me/top/tracks?limit=50',
+        headers=headers
+    )
+    top_tracks = tracks_response.json().get('items', [])
+
+
+    # Get top artists
+    artists_response = requests.get(
+        'https://api.spotify.com/v1/me/top/artists?limit=10',
+        headers=headers
+    )
+    top_artists = artists_response.json().get('items', [])
+
+    return render_template(
+        'marshmallow.html',
+        tracks=top_tracks,
+        artists=top_artists
+    )
+
 
 @app.route('/campfire')
 def campfire():
@@ -140,13 +174,6 @@ def get_curr_track():
         }
         
     return track
-
-
-
-
-
-
-
 
 
 @app.route('/explorer')
