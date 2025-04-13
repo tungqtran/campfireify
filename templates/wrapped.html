@@ -3,36 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <title>Your Spotify Wrapped</title>
+    <style>
+
+        
+        .banner {
+        background-color: black;
+        color: white;
+        font-weight: bold;
+        font-family: 'Segoe UI', sans-serif;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 40px;
+        text-align: center;;
+        }
+        body {
+            background-color: #1DB954;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+
+         h1 {
+            text-align: center;
+            padding: 20px;
+            font-size: 40px;
+            color: white;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            background-color: #121212;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .card {
+            background-color: #121212;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            width: calc(33% - 20px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #B3B3B3;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #B3B3B3;
+        }
+
+        .card .name {
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+
+        .no-content {
+            text-align: center;
+            font-size: 16px;
+            color: #B3B3B3;
+        }
+
+        /* Ensuring responsiveness for smaller screens */
+        @media (max-width: 768px) {
+            .card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: 100%;
+            }
+        }
+
+
+    </style>
 </head>
 <body>
-    <h1>🎧 Your Spotify Wrapped </h1>
+    <div class="banner">
+         
+            <h1 style="text-align: center;"> 🎧 Your Spotify Wrapped</h1>
+      
+        </div>
 
-    <h2>Top Tracks</h2>
-    <ol>
-        {% for track in tracks %}
-            <li>
-                <strong>{{ track.name }}</strong> by {{ track.artists[0].name }}<br>
-                <em>Album:</em> {{ track.album.name }}<br>
-                {% if track.album.images %}
-                    <img src="{{ track.album.images[0].url }}" width="150">
-                {% endif %}
-                <br><br>
-            </li>
-        {% endfor %}
-    </ol>
+     
 
-    <h2>Top Artists</h2>
-    <ol>
-        {% for artist in artists %}
-            <li>
-                <strong>{{ artist.name }}</strong><br>
-                Genres: {{ artist.genres | join(", ") }}<br>
-                {% if artist.images %}
-                    <img src="{{ artist.images[0].url }}" width="150">
+    <div class="container">
+        <!-- Top Tracks Section -->
+        <div class="section">
+            <div class="section-title">
+                <h2>Top Tracks</h2>
+            </div>
+            <div class="section-content">
+                {% if tracks %}
+                    {% for track in tracks %}
+                        <div class="card">
+                            <img src="{{ track.album.images[0].url if track.album.images else 'default-image.png' }}" alt="Track Image">
+                            <div>
+                                <p class="name">{{ track.name }}</p>
+                                <p>by {{ track.artists[0].name }}</p>
+                                <p><strong>Album:</strong> {{ track.album.name }}</p>
+                                <p><strong>Popularity:</strong> {{ track.popularity }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-content">You don’t have any top tracks yet!</div>
                 {% endif %}
-                <br><br>
-            </li>
-        {% endfor %}
-    </ol>
+            </div>
+        </div>
+
+        <!-- Top Artists Section -->
+        <div class="section">
+            <div class="section-title">
+                <h2>Top Artists</h2>
+            </div>
+            <div class="section-content">
+                {% if artists %}
+                    {% for artist in artists %}
+                        <div class="card">
+                            <img src="{{ artist.images[0].url if artist.images else 'default-image.png' }}" alt="Artist Image">
+                            <div>
+                                <p class="name">{{ artist.name }}</p>
+                                <p>Genres: {{ artist.genres | join(", ") }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-content">You don’t have any top artists yet!</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- User Playlists Section -->
+        <div class="section">
+            <div class="section-title">
+                <h2>Your Playlists</h2>
+            </div>
+            <div class="section-content">
+                {% if playlists %}
+                    {% for playlist in playlists %}
+                        <div class="card">
+                            <img src="{{ playlist.images[0].url if playlist.images else 'default-image.png' }}" alt="Playlist Image">
+                            <div>
+                                <p class="name">{{ playlist.name }}</p>
+                                <p>{{ playlist.description if playlist.description else "No description available" }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-content">You don’t have any playlists yet!</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
