@@ -1,55 +1,160 @@
 <!DOCTYPE html>
 <html lang = "en">
 
-<style>
-    .banner {
-      background-color: black ;  
+
+    <style>
+ .banner {
+      background-color: black;
       color: white;
-      text-align: center;
-      padding: 35px 0;
-      font-size: 3.5em;
       font-weight: bold;
       font-family: 'Segoe UI', sans-serif;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 40px;
     }
 
-   
+    /* For the logo and text part */
+    .logo-text {
+      display: flex;
+      align-items: center;
+    }
+
+    .banner img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      margin-left:150px;
+  
+    }
+
+    .banner h3 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .banner h6 {
+      margin: 0;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    /* Profile section */
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile h6 {
+    margin-right: 150px; /* Adjusts space between Profile and Profile image */
+     margin-left: 0; /* Removes any left margin if applied */
+     text-align: left; /* Ensures the text aligns left within the profile container */
+}
+
+    .profile img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    /* Dropdown menu */
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: black;
+      display: none;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown a:hover {
+      background-color: #575757;
+    }
+
+    /* Show dropdown when profile image is hovered */
+    .profile:hover .dropdown {
+      display: block;
+    }
+
+    .button {
+      display: inline-block;         /* so it behaves like a button */
+      background-color: #1DB954;       /* Spotify green background */
+      color: white;                  /* White text */
+      padding: 10px 10px;            /* Padding inside the button */
+      text-decoration: none;         /* Remove underline */
+      border-radius: 5px;            /* Rounded corners */
+      font-size: 30px;    
+      text-align: center;           /* Font size */
+      font-weight: bold;             /* Bold text */
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #17a44a;     /* Darker green on hover */
+      transform: scale(1.05);        /* Slightly increase the size on hover */
+    }
+
+    .button:active {
+      transform: scale(0.98);        /* Slight shrink on click for feedback */
+    }
   </style>
+</head>
+<body style="background-color:#1DB954;">
 
-    <body style = "background-color:#1DB954";>
-    
+  <div class="banner">
+    <!-- Logo and Text Section -->
+    <div class="logo-text">
+      <img src="static/images/spotify_logo.png" alt="Spotify logo">
+      <h3>Spotify©</h3>
+    </div>
 
-        <div class="banner">
-            🎧 Your Spotify Wrapped
-          </div>
+    <!-- Profile Section -->
+    <div class="profile">
+      
+      <img src="static/images/profile_image.png" alt="Profile logo">
+      <h6>Profile</h6>
+      <div class="dropdown">
+        <a href="/login">Sign In</a>
+        <a href="#">Log Out</a>
+      </div>
+    </div>
+  </div>
+          
 
          
 
           <a href="/login" class="button">Login Here</a>
-          <a href="/search" class="button">View Public Data</a>
-          <a href="/campfire" class="button">campfireify</a>
+           
 
 
 
 
           <style>
-            .container {
-              display: flex;  /* This will make the child divs line up in a row */
-              justify-content: flex-start;  
-              gap: 15px;
-              align-items: flex-start;  /* Align them to the top */
-            }
+        
           
             .box {
               background-color: white;
               padding: 10px;
               border-radius: 5px;
-              width: 300px;
-              position:relative; left: 450px;top:0px
+              width: 950px;
+              position:relative; left: 200px;top:0px
             }
           </style>
           
-          <div class="container">
+           
             <div class="box">
               Welcome to your personal Spotify Wrapped experience!
               Here you can explore your top tracks and artists of the year.
@@ -60,15 +165,17 @@
                 <li> Your Top Songs</li>
                 <li> Your Top Albums</li>
               </ul>
-            </div>
-          
-            <div class="box">
+
               Additionally, along with exploring your top tracks and artists, you can also view public data, such as:
           
               <ul>
                 <li> Top Songs by Artists</li>
                 <li> Specific Track Information</li>
               </ul>
+            </div>
+          
+             
+              
             </div>
           </div>
   <style>
@@ -80,8 +187,9 @@
       text-decoration: none;
       border-radius: 5px;
       font-weight: bold;
+      width:800px;
       
-      position:relative; left: 600px;top:300px
+      position:relative; left: 250px;top:400px
     }
     .button:hover {
       background-color: #17a44a;
