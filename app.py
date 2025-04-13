@@ -2,7 +2,7 @@ from flask import Flask, redirect, request, session, render_template
 import requests
 import os
 from main import search_for_artist, get_songs_by_artist, search_for_tracks, get_token
-import jsonify
+
  
 
 
@@ -126,13 +126,13 @@ def campfire():
     track = get_curr_track()
     return render_template('campfire.html', track=track)
 
-@app.route('/campfire-helper')
-def campfire_helper():
-    track = get_curr_track()
-    if track:
-        print(track)
-        return jsonify(track)
-    return jsonify({'error': 'errors!!!'})
+# @app.route('/campfire-helper')
+# def campfire_helper():
+#     track = get_curr_track()
+#     if track:
+#         print(track)
+#         return jsonify(track)
+#     return jsonify({'error': 'errors!!!'})
 
 def get_curr_track():
     token = session.get('token')
